@@ -1,0 +1,11 @@
+#root {
+   height: 100vp; 
+   max-width: 100vw;
+   padding: 0;
+   margin: 0;
+   background-color: #fafafa;
+}
+
+body {
+    margin: 0px;
+}
