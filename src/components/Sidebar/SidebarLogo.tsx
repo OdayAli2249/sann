@@ -1,7 +1,5 @@
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import BasicLogo from "../Logo/BasicLogo";
-import HeaderLogo from "../Logo/HeaderLogo";
 
 const SidebarLogo = ({ sidebarExpanded }: { sidebarExpanded?: boolean }) => {
   return (
@@ -20,7 +18,7 @@ const SidebarLogo = ({ sidebarExpanded }: { sidebarExpanded?: boolean }) => {
           width: "100%",
         }}
       >
-        {!sidebarExpanded && <BasicLogo />}
+        {/* {!sidebarExpanded && <BasicLogo />} */}
         {sidebarExpanded && (
           <Box
             sx={{
@@ -29,7 +27,7 @@ const SidebarLogo = ({ sidebarExpanded }: { sidebarExpanded?: boolean }) => {
               alignItems: "center",
             }}
           >
-            <HeaderLogo />
+            {/* <HeaderLogo /> */}
           </Box>
         )}
       </Link>

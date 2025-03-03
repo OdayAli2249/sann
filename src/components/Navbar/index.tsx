@@ -2,11 +2,9 @@ import AppBar from "@mui/material/AppBar";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import NavUserDropdown from "./NavUserDropdown";
 import { useLocation } from "react-router-dom";
 import { urlToPageNameMapper } from "@/constants/urlToPageNameMapper";
 import { Box } from "@mui/material";
-import AppBreadCrumbs from "../AppBreadCrumbs";
 import { getStandardUrlFrom } from "@/utils/helpers";
 
 type PropTypes = {
@@ -63,7 +61,6 @@ const Navbar = (props: PropTypes) => {
             justifyContent: "flex-start",
           }}
         >
-          <AppBreadCrumbs />
           <Typography variant="h5">
             {urlToPageNameMapper[getStandardUrlFrom(location.pathname)]}
           </Typography>
@@ -74,7 +71,6 @@ const Navbar = (props: PropTypes) => {
           gap="0.5rem"
           sx={{ flexShrink: 0 }}
         >
-          <NavUserDropdown />
         </Stack>
       </Toolbar>
     </AppBar>

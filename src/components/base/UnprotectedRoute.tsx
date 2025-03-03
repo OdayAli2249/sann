@@ -8,7 +8,7 @@ const UnProtectedRoute = ({ children }: PropsWithChildren) => {
     state: { isAuthenticated },
   } = useAuthContext();
   if (!isAuthenticated) return <>{children}</>;
-  return <Navigate to={routePathes.patients} replace />;
+  return <Navigate to={routePathes.home} replace />;
 };
 
 export default UnProtectedRoute;
