@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/auth",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/auth/:token",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
