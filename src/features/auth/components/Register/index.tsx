@@ -13,7 +13,7 @@ import { Box, Divider } from "@mui/material";
 import NoteSection from "./components/NotesSection";
 import InfoMessage from "./components/InfoMessage";
 import SimpleSelect from "@/components/inputs/SimpleSelect";
-import { Currency, Industry, LanguageObject, RegisterForm, TimeZone } from "@/types/auth";
+import { Currency, Industry, LanguageObject, RegisterForm, TimeZone } from "@/types/Auth";
 import { authRequestCollection } from "@/api/auth";
 import LocationInput from "./components/LocationInput";
 import PasswordFields from "@/components/inputs/PasswordFields";

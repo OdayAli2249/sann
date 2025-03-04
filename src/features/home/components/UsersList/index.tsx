@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
-import { User } from "@/types/auth";
+import { User } from "@/types/Auth";
 import PaginatedList from "@/components/PaginationList";
 import { users } from "../../dummyData";
 

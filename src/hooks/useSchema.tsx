@@ -1,5 +1,5 @@
 import { styles } from '@/styles/shared';
-import { User } from '@/types/auth';
+import { User } from '@/types/Auth';
 import { TableAdapter, TableColumn } from '@/types/table';
 import { mergeSx } from '@/utils/helpers';
 import { Box } from '@mui/material';

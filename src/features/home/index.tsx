@@ -1,7 +1,7 @@
 import { Grid, Stack } from "@mui/material";
 import { CustomCard } from "./components/CustomCard";
 import { TablePlus } from "@/components/TablePlus";
-import { User } from "@/types/auth";
+import { User } from "@/types/Auth";
 import { useSchema } from "@/hooks/useSchema";
 import { users } from "./dummyData";
 import AppButton from "@/components/inputs/AppButton";

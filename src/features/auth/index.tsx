@@ -18,7 +18,7 @@ import { ForgetPassword } from "./components/ForgetPassword/index.tsx";
 import { Register } from "./components/Register/index.tsx";
 import { VerifyEmailSent } from "./components/VerifyEmailSent/index.tsx";
 import useReactQuery from "@/hooks/useReactQuery.ts";
-import { UserResponse } from "@/types/auth.ts";
+import { UserResponse } from "@/types/Auth.ts";
 import { authRequestCollection } from "@/api/auth.ts";
 import { routePathes } from "@/constants/routePathes.ts";
 
