@@ -27,7 +27,6 @@ const SidebarListItem = ({
   customColor,
 }: PropTypes) => {
   const [expanded, setExpanded] = useState<boolean>(false);
-  // const [hoveredIcon, setHoveredIcon] = useState<string>("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,13 +57,11 @@ const SidebarListItem = ({
           else navigate(MainItem.url!);
           if (smallScreen) setSidebarExpanded?.(false);
         }}
-        // onMouseEnter={() => setHoveredIcon(MainItem.title)}
-        // onMouseLeave={() => setHoveredIcon("")}
         startIcon={
           <ColoredSvg
             color={
               customColor ??
-              (selected // ||(!smallScreen && MainItem.title === hoveredIcon)
+              (selected
                 ? theme.palette.primary.main
                 : theme.palette.action.active)
             }
@@ -76,8 +73,8 @@ const SidebarListItem = ({
         sx={{
           color:
             selected ||
-            (expanded &&
-              MainItem.items?.some((i) => location.pathname.includes(i.url)))
+              (expanded &&
+                MainItem.items?.some((i) => location.pathname.includes(i.url)))
               ? "primary"
               : "text.secondary",
           pointerEvents: "auto",
@@ -110,10 +107,10 @@ const SidebarListItem = ({
           "&  .MuiButton-startIcon": { m: 0 },
           "& svg path": selected
             ? {
-                fill: theme.palette.primary.main,
-                fillOpacity: 1,
-                strokeOpacity: 1,
-              }
+              fill: theme.palette.primary.main,
+              fillOpacity: 1,
+              strokeOpacity: 1,
+            }
             : { fillOpacity: 1, strokeOpacity: 1 },
         }}
       >

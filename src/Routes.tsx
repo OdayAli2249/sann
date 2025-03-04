@@ -7,11 +7,14 @@ import {
 } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import {
-
+  ResetPassword,
+  VerifyEmail,
   Login,
+  Home,
 } from "./features";
 import UnProtectedRoute from "./components/base/UnprotectedRoute";
 import { routePathes } from "./constants/routePathes";
+import ProtectedRoute from "./components/base/ProtectedRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +24,32 @@ const router = createBrowserRouter(
         element={
           <UnProtectedRoute>
             <Login />
+          </UnProtectedRoute>
+        }
+      />
+      <Route path={"/"} element={<RootLayout />}>
+        <Route
+          path={routePathes.home}
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+      <Route
+        path={routePathes.verifyEmail}
+        element={
+          <UnProtectedRoute>
+            <VerifyEmail />
+          </UnProtectedRoute>
+        }
+      />
+      <Route
+        path={routePathes.resetPassword}
+        element={
+          <UnProtectedRoute>
+            <ResetPassword />
           </UnProtectedRoute>
         }
       />

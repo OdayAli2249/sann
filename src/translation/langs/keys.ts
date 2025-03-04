@@ -60,5 +60,9 @@ export const translationKeys = [
 	"No Options",
 	"Contact Info",
 	"Yes",
-	"No"
+	"No",
+	"Save",
+	"Enter new password",
+	"Reset Password",
+	"Resend"
 ] as const;

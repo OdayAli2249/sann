@@ -2,132 +2,88 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import { SxProps } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
-import { SidebarItem } from "../../types/customTypes";
+import React from "react";
 import SidebarListItem from "./SidebarListItem";
 import SidebarLogo from "./SidebarLogo";
-import { useLocation } from "react-router-dom";
-import zIndexes from "@/constants/zIndexes";
+import { useLocation, useNavigate } from "react-router-dom";
 import { sidebarItems } from "@/constants/sidebarItems";
 import { icons } from "@/constants/icons";
 import { logout, useAuthContext } from "@/context/auth";
 import { useTranslation } from "@/translation";
+import useReactQuery from "@/hooks/useReactQuery";
+import { routePathes } from "@/constants/routePathes";
+import { authRequestCollection } from "@/api/auth";
 
 const Sidebar = ({
   expanded,
   setExpanded,
 }: {
   expanded: boolean;
-  setExpanded: React.Dispatch<boolean>;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const [containerWidth, setContainerWidth] = useState<string | number | null>(
-    null
-  );
   const location = useLocation();
-  const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const sidebarContainerStyle: SxProps = {
-    transition: "width ease-out 300ms",
-    left: 0,
-    width: { xs: expanded ? 320 : 0, sm: expanded ? "270px" : "90px" },
-    border: `1px solid ${theme.palette.primary[10]}`,
+    transition: "width 300ms ease-out",
+    width: expanded ? "270px" : "90px",
     position: "fixed",
     top: 0,
-    backgroundColor: "background.navbar",
-    overflowX: expanded ? "visible" : "hidden",
-    zIndex: zIndexes.sidebar,
+    left: 0,
+    height: "100vh",
+    backgroundColor: "white",
+    zIndex: 1000,
+    boxShadow: "3px 0px 23px rgba(206, 213, 216, 0.15)",
+    borderRight: `1px solid #eeeeee`,
   };
 
-  useEffect(() => {
-    renderContainerWidth();
-  }, [smallScreen, expanded]);
-
-  const renderContainerWidth = () => {
-    if (smallScreen && expanded) {
-      setContainerWidth("85%");
-    } else if (smallScreen && !expanded) {
-      setContainerWidth("0");
-    } else {
-      setContainerWidth(null);
-    }
-  };
+  const { mutate: userLogout } = useReactQuery({
+    ...authRequestCollection.logout,
+    onSuccess: () => {
+      dispatch(logout());
+      navigate(routePathes.auth);
+    },
+  });
 
   return (
     <Box
       component={"aside"}
-      minHeight={"100vh"}
-      onMouseEnter={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
       sx={{
         ...sidebarContainerStyle,
-        boxShadow: (theme) =>
-          theme.palette.mode === "dark"
-            ? "3px 0px 25px rgba(32, 35, 45, 0.12);"
-            : "3px 0px 23px rgba(206, 213, 216, 0.15)",
-        width: containerWidth,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "white",
       }}
     >
       <Box>
-        {!smallScreen && <SidebarLogo sidebarExpanded={expanded} />}
+        <SidebarLogo sidebarExpanded={expanded} />
         <Divider sx={{ margin: "1rem", marginTop: 0 }} />
-        <Box
-          width={{ xs: expanded ? "320" : 0, sm: expanded ? 270 : 90 }}
-          sx={{
-            transition: "all 0.3s",
-          }}
-        >
-          <Stack
-            gap={2}
-            sx={
-              smallScreen
-                ? {
-                  height: "fit-content",
-                  maxHeight: "50vh",
-                  overflowY: "scroll",
-                  scrollbarWidth: "none",
-                }
-                : {}
-            }
-          >
-            {sidebarItems.map((item: SidebarItem, index) => {
-              return (
-                <Box key={index}>
-                  <SidebarListItem
-                    sidebarExpanded={expanded}
-                    setSidebarExpanded={setExpanded}
-                    item={item}
-                    selected={
-                      item.url ? location.pathname.includes(item.url) : false
-                    }
-                  />
-                </Box>
-              );
-            })}
-          </Stack>
-        </Box>
+        <Stack gap={2}>
+          {sidebarItems.map((item, index) => (
+            <SidebarListItem
+              key={index}
+              sidebarExpanded={expanded}
+              setSidebarExpanded={setExpanded}
+              item={item}
+              selected={item.url ? location.pathname.includes(item.url) : false}
+            />
+          ))}
+        </Stack>
       </Box>
+
       <Box paddingBottom={"1rem"}>
         <Divider sx={{ margin: "1rem", marginTop: 0 }} />
         <SidebarListItem
-          customColor={theme.palette.error.main}
+          customColor="red"
           sidebarExpanded={expanded}
           setSidebarExpanded={setExpanded}
           item={{
             title: t("Logout"),
             icon: icons.logout,
             url: "/",
-            onClick: () => {
-              dispatch(logout());
-            },
+            onClick: () => userLogout({}),
           }}
           selected={false}
         />

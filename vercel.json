@@ -5,7 +5,15 @@
             "destination": "/index.html"
         },
         {
-            "source": "/auth/:token",
+            "source": "/home",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/verify-email/:token",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/password/reset/:token",
             "destination": "/index.html"
         },
         {

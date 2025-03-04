@@ -1,79 +1,94 @@
-import AppBar from "@mui/material/AppBar";
-import Stack from "@mui/material/Stack";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import { AppBar, Toolbar, IconButton, Box, Stack } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { sidebarItems } from "@/constants/sidebarItems";
+import SettingsIcon from "@mui/icons-material/Settings";
+import SidebarListItem from "../Sidebar/SidebarListItem";
 import { useLocation } from "react-router-dom";
-import { urlToPageNameMapper } from "@/constants/urlToPageNameMapper";
-import { Box } from "@mui/material";
-import { getStandardUrlFrom } from "@/utils/helpers";
+import { Layout } from "@/types/shared";
 
 type PropTypes = {
   sidebarExpanded: boolean;
   setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  setRightDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  layout: Layout;
+  rightDrawerOpen: boolean;
 };
 
-const Navbar = (props: PropTypes) => {
+const Navbar = ({ sidebarExpanded, setExpanded, layout, setRightDrawerOpen }: PropTypes) => {
   const location = useLocation();
 
   return (
-    <AppBar
-      component="nav"
-      sx={{
-        top: 0,
-        backgroundColor: "white",
-        height: { xs: "4rem", sm: "4.375rem" }, // 60px and 70px converted to rem
-        width: {
-          xs: "100%",
-          sm: !props.sidebarExpanded
-            ? "calc(100vw - 90px)"
-            : "calc(100vw - 270px)", // 180px converted to rem
-        },
-        ml: "auto",
-        mr: 0,
-        p: "0.5rem", // 8px converted to rem
-        transition: "300ms ease-out width",
-        backgroundImage: "none",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        boxShadow: (theme) =>
-          theme.palette.mode === "dark"
-            ? "3px 0px 25px rgba(32, 35, 45, 0.12);"
-            : "3px 0px 23px rgba(206, 213, 216, 0.15)",
-        justifyContent: "space-between", // Ensure content stays within bounds
-      }}
-      position="sticky"
-    >
-      <Toolbar
+    <>
+      {/* Main Navbar */}
+      <AppBar
+        component="nav"
         sx={{
-          pl: { sm: "0.5rem" },
-          mr: { sm: "0.75rem" },
-          width: "100%",
+          backgroundColor: "white",
+          height: { xs: "3rem", sm: "3.375rem" },
+          transition: "width 300ms ease-out, margin-right 300ms ease-out",
+          width: layout === "vertical" ?
+            `calc(100%-${sidebarExpanded ? "270px" : "90px"})` : "100%",
+          ml: "auto",
           display: "flex",
-          justifyContent: "space-between",
+          flexDirection: "row",
           alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: `1px solid #eeeeee`,
+          zIndex: 1100, // Ensure visibility
+          boxShadow: "none", // Remove elevation
         }}
+        position="sticky"
       >
+        <Toolbar sx={{
+          width: "100%", display: "flex",
+          justifyContent: layout === "horizontal" ? "flex-end" : "space-between"
+        }}>
+          {/* Sidebar Toggle Button */}
+          {layout === "vertical" && (
+            <IconButton edge="start" color="primary" onClick={() => setExpanded((prev) => !prev)}>
+              <MenuIcon />
+            </IconButton>
+          )}
+          <IconButton
+            color="primary"
+            onClick={() => {
+              setRightDrawerOpen(true);
+            }}
+          >
+            <SettingsIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Horizontal Menu Bar */}
+      {layout === "horizontal" && (
         <Box
           sx={{
+            backgroundColor: "#f8f8f8",
+            padding: "0.5rem",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 1000, // Ensure it appears
+            borderBottom: "1px solid #ddd",
           }}
         >
-          <Typography variant="h5">
-            {urlToPageNameMapper[getStandardUrlFrom(location.pathname)]}
-          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Stack direction="row" gap={2}>
+              {sidebarItems.map((item, index) => (
+                <SidebarListItem
+                  key={index}
+                  sidebarExpanded={true}
+                  setSidebarExpanded={setExpanded}
+                  item={item}
+                  selected={item.url ? location.pathname.includes(item.url) : false}
+                />
+              ))}
+            </Stack>
+          </Stack>
         </Box>
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap="0.5rem"
-          sx={{ flexShrink: 0 }}
-        >
-        </Stack>
-      </Toolbar>
-    </AppBar>
+      )}
+    </>
   );
 };
 

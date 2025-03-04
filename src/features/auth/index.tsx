@@ -9,26 +9,29 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as yup from "yup";
 import { useTheme } from "@mui/material/styles";
-// import { useAlert } from "@/context/alerts";
-// import { login, useAuthContext } from "@/context/auth";
-// import { routePathes } from "@/constants/routePathes";
+import { useAlert } from "@/context/alerts";
+import { login, useAuthContext } from "@/context/auth";
 import { useLocation, useNavigate } from "react-router-dom";
-// import useReactQuery from "@/hooks/useReactQuery";
-// import { authEndpoints } from "@/api/auth";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "@/translation";
 import { ForgetPassword } from "./components/ForgetPassword/index.tsx";
 import { Register } from "./components/Register/index.tsx";
+import { VerifyEmailSent } from "./components/VerifyEmailSent/index.tsx";
+import useReactQuery from "@/hooks/useReactQuery.ts";
+import { UserResponse } from "@/types/auth.ts";
+import { authRequestCollection } from "@/api/auth.ts";
+import { routePathes } from "@/constants/routePathes.ts";
 
 export enum Content {
   Register = 'Register',
   ForgetPassword = 'ForgetPassword',
   Default = 'Default',
+  VerifyEmail = 'VerifyEmail',
 }
 
 export const Login = () => {
   const theme = useTheme();
-  // const alert = useAlert();
+  const alert = useAlert();
   const largScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const navigate = useNavigate();
 
@@ -37,25 +40,26 @@ export const Login = () => {
     password: yup.string().min(6).required().label("Password"),
   });
 
-  // const { dispatch } = useAuthContext();
+  const { dispatch } = useAuthContext();
   const location = useLocation();
   const nextSearchParams = new URLSearchParams(location.search);
-
+  const [emailToVerify, setEmailToVerify] = useState<string>();
   const content = nextSearchParams.get('t') ?? Content.Default;
   const isRegister = content === Content.Register;
   const isForgetPassword = content === Content.ForgetPassword;
   const isDefault = content === Content.Default;
+  const isVerifyEmail = content === Content.VerifyEmail;
 
   const { t } = useTranslation();
-  // const { mutate: userLogin, isLoading } = useReactQuery({
-  //   url: authEndpoints.login.url,
-  //   method: "POST",
-  //   onSuccess: (response) => {
-  //     dispatch(login(response.data?.accessToken, response.data?.refreshToken));
-  //     navigate(routePathes.patients);
-  //     alert(t("Welcome back! Your login was successful."), "success");
-  //   },
-  // });
+  const { mutate: userLogin, isLoading } = useReactQuery<UserResponse>({
+    ...authRequestCollection.login,
+    onError: () => alert("Invalid credentials", "error"),
+    onSuccess: (response) => {
+      dispatch(login(response.data?.token ?? ''));
+      navigate(routePathes.home);
+      alert(t("Welcome back! Your login was successful."), "success");
+    },
+  });
 
   const { values, handleChange, handleSubmit, errors } = useForm<{
     email: string;
@@ -65,11 +69,10 @@ export const Login = () => {
     validationSchema,
     onSubmit: async (values) => {
       console.log(values);
-
-      // userLogin({
-      //   email: values.email.trim(),
-      //   password: values.password.trim(),
-      // });
+      userLogin({
+        email: values.email.trim(),
+        password: values.password.trim(),
+      });
     },
   });
 
@@ -86,39 +89,38 @@ export const Login = () => {
     nextSearchParams.set('t', Content.Default);
     handleNavigate(nextSearchParams);
   }, []);
+  const setContentToVerifyEmail = useCallback(() => {
+    nextSearchParams.set('t', Content.VerifyEmail);
+    handleNavigate(nextSearchParams);
+  }, []);
 
   const handleNavigate = (nextSearchParams: URLSearchParams) => navigate({
     ...location,
     search: nextSearchParams.toString()
   });
 
+  const onHandleVerifyEmailNav = (email: string) => setEmailToVerify(email);
+
+  useEffect(() => {
+    if (emailToVerify)
+      setContentToVerifyEmail();
+  }, [emailToVerify])
+
   return (
     <Stack
       width="100%"
       height={largScreen || !isRegister ? "100vh" : "auto"}
       sx={{
-        // background: ` url(${LoginBg}),linear-gradient(180deg, #3D5FA7 0%, #182541 100%)`,
         backgroundColor: theme.palette.background.default,
         backgroundSize: "cover",
         backgroundPosition: "center",
         justifyContent: "center",
         flexDirection: "column",
         padding: "20px",
-        // gap: "32px",
         alignItems: "center",
         overflow: 'auto'
       }}
     >
-      {/* {!smallScreen && <Box
-        sx={{
-          width: "35%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: 'transparent',
-          maxWidth: "100%",
-        }}
-      />} */}
       <Stack
         sx={{
           width: "100%",
@@ -127,8 +129,6 @@ export const Login = () => {
           height: "auto",
           border: "1px solid background.divider",
           borderRadius: "16px",
-          // borderEndEndRadius: "16px",
-          // borderStartEndRadius: "16px",
           backgroundColor: theme.palette.background.paper,
           justifyContent: "center",
           alignItems: "center",
@@ -219,7 +219,8 @@ export const Login = () => {
                 },
               }}
               type="submit"
-              disabled={false}
+              disabled={isLoading}
+              isLoading={isLoading}
               onClick={onLogin}
             >
               {t("Login")}
@@ -234,6 +235,14 @@ export const Login = () => {
         )}
         {isRegister && (
           <Register
+            backTitle={t("Back to User Login")}
+            onHandleVerifyEmailNav={onHandleVerifyEmailNav}
+            onHandleStepBack={setContentToDefault} />
+        )}
+        {isVerifyEmail && (
+          <VerifyEmailSent
+            email={emailToVerify ?? ''}
+            backTitle={t("Back to User Login")}
             onHandleStepBack={setContentToDefault} />
         )}
       </Stack>

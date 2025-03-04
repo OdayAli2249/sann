@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { Country, CountryState } from "@/types/Auth";
+import { Country, CountryState } from "@/types/auth";
 import SimpleSelect from "@/components/inputs/SimpleSelect";
 import { authRequestCollection } from "@/api/auth";
 import { FormikErrors } from "formik";

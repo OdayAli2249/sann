@@ -1,3 +1,9 @@
+import { SxProps, Theme } from '@mui/material/styles';
+
+export type SX = SxProps<Theme>;
+
+export type Layout = "horizontal" | "vertical";
+
 export type ConfirmProps<T = any> = {
   title?: string;
   message?: string;

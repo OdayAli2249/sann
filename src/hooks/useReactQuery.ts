@@ -3,10 +3,10 @@ import { filterQueryObject, transformFirstLetterToUppercase } from "@/utils/help
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError, AxiosHeaders, Method, RawAxiosRequestHeaders } from "axios";
 import useAxios from "./useAxios";
-import { apiConfig } from "@/api/config";
 import { useAlert } from "@/context/alerts";
 import { getAlertMessage } from "@/api/constants/apiMessages";
 import { useTranslation } from "@/translation";
+import { BASE_URL } from "@/config";
 
 interface UseReactQueryOptions<R = any> {
     key?: string;
@@ -40,7 +40,7 @@ const useReactQuery = <R = any>({
 
     const fetcher = async <R = any>(data: any, query: QueryObject) => {
         const res = await axios.request<APIResponse<R>>({
-            baseURL: baseUrl ?? apiConfig.apiBaseUrl,
+            baseURL: baseUrl ?? BASE_URL,
             url,
             method,
             data,
@@ -62,19 +62,20 @@ const useReactQuery = <R = any>({
             UseQueryResult<APIResponse<R>, AxiosError<APIResponse>>)
         : (useMutation([key], (data) => fetcher<R>(data, query), {
             onError: (error: AxiosError<APIResponse>) => {
-                onError?.(error);
                 alert(
                     error?.response?.data.errors ?
                         transformFirstLetterToUppercase(
                             (Object.values(error?.response?.data.errors).flat().join('-') as string)
-                            ?? error?.response?.data.message ?? t("Something wrong happened!")
+                            ?? error?.response?.data.message ??
+                            t("Something wrong happened!")
                         ) : transformFirstLetterToUppercase(t("Something wrong happened!")),
                     "error",
                     t("Failed")
                 );
+                onError?.(error);
             },
             onSuccess: (data) => {
-                alert(getAlertMessage("Resource", "success", method), "success");
+                alert(data.message ?? getAlertMessage("Resource", "success", method), "success");
                 onSuccess?.(data);
             },
         }) as UseMutationResult<APIResponse<R>, AxiosError<APIResponse>> &

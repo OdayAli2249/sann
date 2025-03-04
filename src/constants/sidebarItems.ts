@@ -5,7 +5,12 @@ import { routePathes } from "./routePathes";
 export const sidebarItems: SidebarItem[] = [
     {
         title: "Home",
-        icon: icons.people,
+        icon: icons.linkedin,
         url: routePathes.home,
+    },
+    {
+        title: "Settings",
+        icon: icons.banner,
+        url: routePathes.auth,
     },
 ];

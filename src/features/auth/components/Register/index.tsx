@@ -13,17 +13,19 @@ import { Box, Divider } from "@mui/material";
 import NoteSection from "./components/NotesSection";
 import InfoMessage from "./components/InfoMessage";
 import SimpleSelect from "@/components/inputs/SimpleSelect";
-import { Currency, Industry, LanguageObject, RegisterForm, TimeZone } from "@/types/Auth";
+import { Currency, Industry, LanguageObject, RegisterForm, TimeZone } from "@/types/auth";
 import { authRequestCollection } from "@/api/auth";
 import LocationInput from "./components/LocationInput";
 import PasswordFields from "@/components/inputs/PasswordFields";
 import { objectToFormdata } from "./utils";
 
 interface RegisterProps {
+    backTitle: string;
     onHandleStepBack: VoidFunction;
+    onHandleVerifyEmailNav: (email: string) => void;
 }
 export const Register: React.FC<RegisterProps> = (props) => {
-    let { onHandleStepBack } = props;
+    let { onHandleStepBack, onHandleVerifyEmailNav, backTitle } = props;
     const [isRegisteredForVat, setIsRegisteredForVat] = useState(false);
 
     const validationSchema = yup.object<Partial<RegisterForm>>({
@@ -61,13 +63,13 @@ export const Register: React.FC<RegisterProps> = (props) => {
         Partial<RegisterForm> & { confirmPassword?: string }
     >({
         initialValues: {},
-        onSubmit: (values) => {
-            console.log("$#$____values", values);
-            sendRequest(objectToFormdata(values));
-        },
+        onSubmit: (values) => sendRequest(objectToFormdata(values)),
         validationSchema,
     });
-    const { mutate: sendRequest, isLoading } = useReactQuery(authRequestCollection.register);
+    const { mutate: sendRequest, isLoading } = useReactQuery({
+        ...authRequestCollection.register,
+        onSuccess: (_) => onHandleVerifyEmailNav(values.email ?? ''),
+    });
 
     return (
         <Stack width="100%"
@@ -303,10 +305,10 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     disabled={isLoading}
                     aria-hidden={isLoading}
                 >
-                    {t("Back to User Login")}
+                    {backTitle}
                 </AppButton>
                 <AppButton
-                    width={120}
+                    width="fit-content"
                     type="submit"
                     disabled={isLoading}
                     isLoading={isLoading}

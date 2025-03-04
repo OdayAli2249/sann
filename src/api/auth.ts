@@ -27,5 +27,35 @@ export const authRequestCollection: RequestCollection = {
     url: `${PREFIX}/register`,
     queryKey: 'REGISTER',
     method: 'POST'
+  },
+  forgotPassword: {
+    url: `${PREFIX}/forgot-password`,
+    queryKey: 'FORGOT-PASSWORD',
+    method: 'POST'
+  },
+  resetPassword: {
+    url: `${PREFIX}/reset-password`,
+    queryKey: 'RESET-PASSWORD',
+    method: 'POST'
+  },
+  resendVerificationEmail: {
+    url: `${PREFIX}/resend-verification-email`,
+    queryKey: 'RESEND-VERIFICATION-EMAIL',
+    method: 'POST'
+  },
+  verfiyEmail: {
+    url: `${PREFIX}/verfiy-email`,
+    queryKey: 'VERIFY-EMAIL',
+    method: 'POST'
+  },
+  login: {
+    url: `${PREFIX}/login`,
+    queryKey: 'LOGIN',
+    method: 'POST'
+  },
+  logout: {
+    url: `${PREFIX}/logout`,
+    queryKey: 'LOGOUT',
+    method: 'POST'
   }
 };

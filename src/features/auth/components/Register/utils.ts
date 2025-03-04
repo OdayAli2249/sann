@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/types/Auth";
+import { RegisterForm } from "@/types/auth";
 
 export const objectToFormdata = (obj: Partial<RegisterForm>): FormData => {
     const formData = new FormData();

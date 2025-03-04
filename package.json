@@ -37,7 +37,8 @@
     "react-router-dom": "^6.26.2",
     "universal-cookie": "^7.1.4",
     "use-places-autocomplete": "^4.0.0",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "react-apexcharts": "^1.7.0"
   },
   "devDependencies": {
     "@types/jwt-decode": "^3.1.0",
