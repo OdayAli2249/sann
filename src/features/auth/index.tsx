@@ -109,7 +109,7 @@ export const Login = () => {
   return (
     <Stack
       width="100%"
-      height={largScreen || !isRegister ? "100vh" : "auto"}
+      height={!isRegister ? "100vh" : "auto"}
       sx={{
         backgroundColor: theme.palette.background.default,
         backgroundSize: "cover",
