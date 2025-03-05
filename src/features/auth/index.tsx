@@ -6,7 +6,6 @@ import { calculateSpacing } from "@/utils/helpers";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import * as yup from "yup";
 import { useTheme } from "@mui/material/styles";
 import { useAlert } from "@/context/alerts";
@@ -32,7 +31,6 @@ export enum Content {
 export const Login = () => {
   const theme = useTheme();
   const alert = useAlert();
-  const largScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const navigate = useNavigate();
 
   const validationSchema = yup.object({
